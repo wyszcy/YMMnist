@@ -1,0 +1,14 @@
+.vs
+Debug
+ipch
+x64
+YMMnist.sln
+YMMnist.VC.db
+YMMnist.VC.VC.opendb
+YMMnist/ReadMe.txt
+YMMnist/YMMnist.vcxproj
+YMMnist/YMMnist.vcxproj.filters
+YMMnist/stdafx.cpp
+YMMnist/stdafx.h
+YMMnist/targetver.h
+YMMnist/x64
