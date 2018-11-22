@@ -58,8 +58,8 @@ bool YMMnist::GetLabelFrData(const char *file, std::vector<YMMnistImage> &data) 
 		return false;
 	}
 
-	std::swap(byteData[4], byteData[7]); // 转换大小尾
-	std::swap(byteData[5], byteData[6]); // 转换大小尾
+	std::swap(byteData[4], byteData[7]); // conver the big end to little end
+	std::swap(byteData[5], byteData[6]); // conver the big end to little end
 
 	unsigned __int32 len = 0;
 	memcpy(&len, byteData.data() + 4, sizeof(byte) * 4);
@@ -80,8 +80,8 @@ bool YMMnist::GetImageFrData(const char *file, std::vector<YMMnistImage> &data) 
 		return false;
 	}
 
-	std::swap(byteData[4], byteData[7]); // 转换大小尾
-	std::swap(byteData[5], byteData[6]); // 转换大小尾
+	std::swap(byteData[4], byteData[7]); // conver the big end to little end
+	std::swap(byteData[5], byteData[6]); // conver the big end to little end
 
 	unsigned __int32 len = 0;
 	memcpy(&len, byteData.data() + 4, sizeof(byte) * 4);
@@ -90,10 +90,10 @@ bool YMMnist::GetImageFrData(const char *file, std::vector<YMMnistImage> &data) 
 		return false;
 	}
 
-	std::swap(byteData[8], byteData[11]); // 转换大小尾
-	std::swap(byteData[9], byteData[10]); // 转换大小尾
-	std::swap(byteData[12], byteData[15]); // 转换大小尾
-	std::swap(byteData[13], byteData[14]); // 转换大小尾
+	std::swap(byteData[8], byteData[11]); // conver the big end to little end
+	std::swap(byteData[9], byteData[10]); // conver the big end to little end
+	std::swap(byteData[12], byteData[15]); // conver the big end to little end
+	std::swap(byteData[13], byteData[14]); // conver the big end to little end
 
 	unsigned __int32 row = 0;
 	unsigned __int32 col = 0;
