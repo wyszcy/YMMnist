@@ -25,6 +25,9 @@ public:
 		return *this;
 	}
 
+	byte GetPixel(int x, int y) const { return m_pixels[x + m_width * y]; }
+	void SetPixel(int x, int y, byte pixel) { m_pixels[x + m_width * y] = pixel; }
+
 public:
 	unsigned __int32 m_width = 0;
 	unsigned __int32 m_height = 0;
@@ -39,7 +42,7 @@ public:
 	YMMnist();
 	~YMMnist();
 
-	bool LoadTrainSet(const char *folder);
+	bool LoadSet(const char *imageFile, const char *labelFile);
 
 	const std::vector<YMMnistImage>& GetData() const { return m_data; }
 

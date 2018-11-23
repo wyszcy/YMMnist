@@ -10,17 +10,17 @@ YMMnist::~YMMnist()
 
 }
 
-bool YMMnist::LoadTrainSet(const char *folder)
+bool YMMnist::LoadSet(const char *imageFile, const char *labelFile)
 {
-	const std::string imageFile = std::string(folder) + R"(\train-images.idx3-ubyte)";
-	const std::string labelFile = std::string(folder) + R"(\train-labels.idx1-ubyte)";
+	//const std::string imageFile = std::string(folder) + R"(\train-images.idx3-ubyte)";
+	//const std::string labelFile = std::string(folder) + R"(\train-labels.idx1-ubyte)";
 
 	m_data.swap(decltype(m_data)());
-	if (!GetLabelFrData(labelFile.c_str(), m_data))
+	if (!GetLabelFrData(labelFile, m_data))
 	{
 		return false;
 	}
-	if (!GetImageFrData(imageFile.c_str(), m_data))
+	if (!GetImageFrData(imageFile, m_data))
 	{
 		return false;
 	}

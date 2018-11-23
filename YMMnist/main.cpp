@@ -27,7 +27,7 @@ int main()
 	const std::wstring path = GetCurrentPathW();
 
 	YMMnist lib;
-	if (!lib.LoadTrainSet((GetCurrentPathA() + "\\mnist").c_str()))
+	if (!lib.LoadSet((GetCurrentPathA() + R"(\mnist\train-images.idx3-ubyte)").c_str(), (GetCurrentPathA() + R"(\mnist\train-labels.idx1-ubyte)").c_str()))
 	{
 		std::cout << "fail to load the mnist data" << std::endl;
 		return -1;
