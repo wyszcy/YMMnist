@@ -10,7 +10,7 @@ YMMnist::~YMMnist()
 
 }
 
-bool YMMnist::Load(const char *folder)
+bool YMMnist::LoadTrainSet(const char *folder)
 {
 	const std::string imageFile = std::string(folder) + R"(\train-images.idx3-ubyte)";
 	const std::string labelFile = std::string(folder) + R"(\train-labels.idx1-ubyte)";

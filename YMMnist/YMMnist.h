@@ -39,7 +39,7 @@ public:
 	YMMnist();
 	~YMMnist();
 
-	bool Load(const char *folder);
+	bool LoadTrainSet(const char *folder);
 
 	const std::vector<YMMnistImage>& GetData() const { return m_data; }
 

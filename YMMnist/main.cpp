@@ -6,14 +6,17 @@
 #include <random>
 #include <forward_list>
 
+#include <windows.h>
+
 #include "YMMnist.h"
 #include "ArrayToImage.h"
+#include "utility.h"
 
-void TestDataValidate(const YMMnistImage &data)
+void TestDataValidate(const YMMnistImage &data, const wchar_t *folder)
 {
 	static unsigned int index = 0;
 	wchar_t filename[_MAX_PATH];
-	swprintf_s(filename, _MAX_PATH, LR"(D:\code\cpp\YMMnist\x64\Release\New folder\%d_%d.png)", index, data.m_label);
+	swprintf_s(filename, _MAX_PATH, LR"(%s\DataValidate\%d_%d.png)", folder, index, data.m_label);
 	ArrayToImage(filename, data.m_pixels.data(), data.m_width, data.m_height);
 
 	index += 1;
@@ -21,8 +24,10 @@ void TestDataValidate(const YMMnistImage &data)
 
 int main()
 {
+	const std::wstring path = GetCurrentPathW();
+
 	YMMnist lib;
-	if (!lib.Load(R"(D:\code\cpp\YMMnist\x64\Release\mnist)"))
+	if (!lib.LoadTrainSet((GetCurrentPathA() + "\\mnist").c_str()))
 	{
 		std::cout << "fail to load the mnist data" << std::endl;
 		return -1;
@@ -34,11 +39,11 @@ int main()
 	for (size_t i = 0; i < 100; ++i)
 	{
 		data.emplace_front(u(e));
-	}
+	}	
 
 	for (const auto &item : data)
 	{
-		TestDataValidate(lib.GetData()[item]);
+		TestDataValidate(lib.GetData()[item], path.c_str());
 	}
 
     return 0;
