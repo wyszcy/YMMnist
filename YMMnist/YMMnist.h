@@ -44,7 +44,7 @@ public:
 
 	bool LoadSet(const char *imageFile, const char *labelFile);
 
-	const std::vector<YMMnistImage>& GetData() const { return m_data; }
+	std::vector<YMMnistImage>& GetData() { return m_data; }
 
 private:
 	bool GetImageFrData(const char *file, std::vector<YMMnistImage> &data) const;

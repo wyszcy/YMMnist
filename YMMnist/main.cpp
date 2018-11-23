@@ -11,6 +11,7 @@
 #include "YMMnist.h"
 #include "ArrayToImage.h"
 #include "utility.h"
+#include "YMCNN.h"
 
 void TestDataValidate(const YMMnistImage &data, const wchar_t *folder)
 {
@@ -36,13 +37,15 @@ int main()
 	std::default_random_engine e;
 	std::forward_list<decltype(e())> data;
 	std::uniform_int_distribution<unsigned int> u(0, lib.GetData().size() - 1);
-	for (size_t i = 0; i < 100; ++i)
+	for (size_t i = 0; i < 30; ++i)
 	{
 		data.emplace_front(u(e));
 	}	
 
 	for (const auto &item : data)
 	{
+		TestDataValidate(lib.GetData()[item], path.c_str());
+		YMCNN::Subsampling(lib.GetData()[item], 2);
 		TestDataValidate(lib.GetData()[item], path.c_str());
 	}
 
