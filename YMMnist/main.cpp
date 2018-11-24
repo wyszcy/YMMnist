@@ -11,14 +11,13 @@
 #include "YMMnist.h"
 #include "ArrayToImage.h"
 #include "utility.h"
-#include "YMCNN.h"
 
 void TestDataValidate(const YMMnistImage &data, const wchar_t *folder)
 {
 	static unsigned int index = 0;
 	wchar_t filename[_MAX_PATH];
-	swprintf_s(filename, _MAX_PATH, LR"(%s\DataValidate\%d_%d.png)", folder, index, data.m_label);
-	ArrayToImage(filename, data.m_pixels.data(), data.m_width, data.m_height);
+	swprintf_s(filename, _MAX_PATH, LR"(%s\DataValidate\%d_%d.png)", folder, index, data.GetLabel());
+	ArrayToImage(filename, data.GetPixels().data(), data.GetWidth(), data.GetHeight());
 
 	index += 1;
 }
@@ -45,7 +44,7 @@ int main()
 	for (const auto &item : data)
 	{
 		TestDataValidate(lib.GetData()[item], path.c_str());
-		YMCNN::Subsampling(lib.GetData()[item], 2);
+		lib.GetData()[item].Subsampling(2);
 		TestDataValidate(lib.GetData()[item], path.c_str());
 	}
 
