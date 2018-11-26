@@ -2,21 +2,56 @@
 
 #define max(X, Y) (X) > (Y) ? (X) : (Y)
 
-void YMMnistImage::Convolution(const YMConvolutionCore &core)
+byte YMMnistImage::ToLabel(const YMMnistImageTransParam &param)
 {
-	const auto originWidth = m_width;
-	m_width -= core.radiusH * 2;
-	m_height -= core.radiusV * 2;
-	decltype(m_pixels) tempPixels = std::move(m_pixels);
-	m_pixels.resize(m_width - m_height);
+	byte label = 0;
 
-	for (int i = 0; i < m_height; ++i)
+	// C1 convolutions
+	std::vector<YMMnistImage> c1Output;
+	c1Output.resize(param.C1.size());
+	for (size_t i = 0; i < c1Output.size(); ++i)
 	{
-		for (int j = 0; j < m_width; ++j)
+		c1Output[i] = Convolution(param.C1[i]);
+	}
+	
+	// S2 pools
+	std::vector<YMMnistImage> s2Output = std::move(c1Output);
+	for (auto &item : s2Output)
+	{
+		item = Subsampling(param.S2);
+	}
+
+	// C3 convolutions
+
+	// S4 pools
+
+	// C5 layer
+
+	// C6 layer
+
+	// C7 output
+
+	return label;
+}
+
+YMMnistImage YMMnistImage::Convolution(const YMConvolutionCore &core) const
+{
+	YMMnistImage result;
+
+	result.m_width = m_width - core.radiusH * 2;
+	result.m_height = m_height - core.radiusV * 2;
+	result.m_pixels.resize(result.m_width * result.m_height);
+	result.m_label = m_label;
+
+	for (int i = 0; i < result.m_height; ++i)
+	{
+		for (int j = 0; j < result.m_width; ++j)
 		{
-			SetPixel(i, j, ConvolutionPixel(core, m_pixels, j, i, originWidth));
+			result.SetPixel(i, j, ConvolutionPixel(core, m_pixels, j, i, m_width));
 		}
 	}
+
+	return result;
 }
 
 byte YMMnistImage::ConvolutionPixel(const YMConvolutionCore &core, const std::vector<byte> &data, int left, int top, int width) const
@@ -34,25 +69,30 @@ byte YMMnistImage::ConvolutionPixel(const YMConvolutionCore &core, const std::ve
 		}
 	}
 
-	return res;
+	res += core.bias; // º”»Î∆´÷√
+
+	return (byte)(res & 0x00000000000000FF);
 }
 
-void YMMnistImage::Subsampling(int compress)
+YMMnistImage YMMnistImage::Subsampling(int compress) const
 {
-	std::vector<byte> tempPixel = std::move(m_pixels);
-	const unsigned int oldWidth = m_width;
-	m_width /= compress;
-	m_height /= compress;
-	m_pixels.resize(m_width * m_height);
+	YMMnistImage result;
 
-	for (int i = 0; i < m_height; ++i)
+	result.m_width = m_width / compress;
+	result.m_height = m_height / compress;
+	result.m_pixels.resize(result.m_width * result.m_height);
+	result.m_label = m_label;
+
+	for (int i = 0; i < result.m_height; ++i)
 	{
-		for (int j = 0; j < m_width; ++j)
+		for (int j = 0; j < result.m_width; ++j)
 		{
-			const unsigned int tempValue = MatrixMax(tempPixel, j*compress, (j + 1)*compress - 1, i*compress, (i + 1)*compress - 1, oldWidth);
-			SetPixel(j, i, tempValue);
+			const unsigned int tempValue = MatrixMax(m_pixels, j*compress, (j + 1)*compress - 1, i*compress, (i + 1)*compress - 1, m_width);
+			result.SetPixel(j, i, tempValue);
 		}
 	}
+
+	return result;
 }
 
 byte YMMnistImage::MatrixMax(const std::vector<byte> &data, int left, int right, int top, int bottom, int width) const

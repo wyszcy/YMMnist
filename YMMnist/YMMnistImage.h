@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "YMConvolutionCore.h"
+#include "YMMnistDef.h"
 
 using byte = unsigned char;
 
@@ -39,8 +39,10 @@ public:
 	void SetPixel(int x, int y, byte pixel) { m_pixels[x + m_width * y] = pixel; }
 
 	//
-	void Convolution(const YMConvolutionCore &core);
-	void Subsampling(int compress = 2);
+	byte ToLabel(const YMMnistImageTransParam &param);
+
+	YMMnistImage Convolution(const YMConvolutionCore &core) const;
+	YMMnistImage Subsampling(int compress = 2) const;
 
 private:
 	byte MatrixMax(const std::vector<byte> &data, int left, int right, int top, int bottom, int width) const;

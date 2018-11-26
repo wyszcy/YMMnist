@@ -26,12 +26,19 @@ int main()
 {
 	const std::wstring path = GetCurrentPathW();
 
+	// ÑµÁ·
 	YMMnist lib;
 	if (!lib.LoadSet((GetCurrentPathA() + R"(\mnist\train-images.idx3-ubyte)").c_str(), (GetCurrentPathA() + R"(\mnist\train-labels.idx1-ubyte)").c_str()))
 	{
 		std::cout << "fail to load the mnist data" << std::endl;
 		return -1;
 	}
+
+	//auto &ssss = lib.GetData().front();
+
+	//YMMnistImageTransParam param;
+	//param.InitByRandom();
+	//ssss.ToLabel(param);
 
 	std::default_random_engine e;
 	std::forward_list<decltype(e())> data;
@@ -44,8 +51,8 @@ int main()
 	for (const auto &item : data)
 	{
 		TestDataValidate(lib.GetData()[item], path.c_str());
-		lib.GetData()[item].Subsampling(2);
-		TestDataValidate(lib.GetData()[item], path.c_str());
+		auto ssss = lib.GetData()[item].Subsampling(2);
+		TestDataValidate(ssss, path.c_str());
 	}
 
     return 0;
