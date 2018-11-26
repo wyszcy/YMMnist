@@ -6,8 +6,10 @@ byte YMMnistImage::ToLabel(const YMMnistImageTransParam &param)
 {
 	byte label = 0;
 
+	using DataSet = std::vector<YMMnistImage>;
+
 	// C1 convolutions
-	std::vector<YMMnistImage> c1Output;
+	DataSet c1Output;
 	c1Output.resize(param.C1.size());
 	for (size_t i = 0; i < c1Output.size(); ++i)
 	{
@@ -15,15 +17,39 @@ byte YMMnistImage::ToLabel(const YMMnistImageTransParam &param)
 	}
 	
 	// S2 pools
-	std::vector<YMMnistImage> s2Output = std::move(c1Output);
+	DataSet s2Output = std::move(c1Output);
 	for (auto &item : s2Output)
 	{
-		item = Subsampling(param.S2);
+		item = item.Subsampling(param.S2);
 	}
 
 	// C3 convolutions
+	const int c3Count = param.C3.size() / param.C1.size();
+	DataSet c3Output;
+	c3Output.reserve(c3Count);
+	for (size_t i = 0; i < s2Output.size(); ++i)
+	{
+		for (size_t j = 0; j < c3Count; ++j)
+		{
+			const int index = i * c3Count + j;
+			auto &link = param.C3[index];
+			if (j == 0)
+			{
+				c3Output.emplace_back(s2Output[i].Convolution(link));
+			}
+			else
+			{
+				c3Output.back() += s2Output[i].Convolution(link);
+			}
+		}
+	}
 
 	// S4 pools
+	DataSet s4Output = std::move(c3Output);
+	for (auto &item : s4Output)
+	{
+		item = item.Subsampling(param.S4);
+	}
 
 	// C5 layer
 
@@ -68,8 +94,6 @@ byte YMMnistImage::ConvolutionPixel(const YMConvolutionCore &core, const std::ve
 			res += core.GetPixel(j-left, i-top) * data[tempIndex];
 		}
 	}
-
-	res += core.bias; // ¼ÓÈëÆ«ÖÃ
 
 	return (byte)(res & 0x00000000000000FF);
 }
@@ -123,4 +147,51 @@ byte YMMnistImage::MatrixAvg(const std::vector<byte> &data, int left, int right,
 	maxVal /= (right - left + 1) * (bottom - top + 1);
 
 	return (byte)(maxVal & 0x00000000000000FF);
+}
+
+void YMMnistImage::Normalization(int width, int height)
+{
+	std::vector<byte> newPixels;
+	newPixels.resize(width*height, 0);
+	const int gapH = (width - m_width) / 2;
+	const int gapV = (height - m_height) / 2;
+
+	if (gapV >= 0)
+	{
+		if (gapH >= 0)
+		{
+			for (int i = gapV; i < gapV + m_height; ++i)
+			{
+				memcpy(newPixels.data() + i*width + gapH, m_pixels.data() + (i - gapV)*m_width, sizeof(byte)*m_width);
+			}
+		}
+		else
+		{
+			for (int i = gapV; i < gapV + m_height; ++i)
+			{
+				memcpy(newPixels.data() + i*width, m_pixels.data() + (i - gapV)*m_width, sizeof(byte)*width);
+			}
+		}
+	}
+	else
+	{
+		if (gapH >= 0)
+		{
+			for (int i = 0; i < height; ++i)
+			{
+				memcpy(newPixels.data() + i*width + gapH, m_pixels.data() + (i - gapV)*m_width, sizeof(byte)*m_width);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < height; ++i)
+			{
+				memcpy(newPixels.data() + i*width, m_pixels.data() + (i - gapV)*m_width, sizeof(byte)*width);
+			}
+		}
+	}
+	
+	m_pixels = std::move(newPixels);
+	m_width = width;
+	m_height = height;
 }

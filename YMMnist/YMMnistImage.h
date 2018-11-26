@@ -11,6 +11,13 @@ struct YMMnistImage
 	friend class YMMnist;
 public:
 	YMMnistImage() = default;
+	YMMnistImage(int width, int height, byte label)
+	{
+		m_width = width;
+		m_height = height;
+		m_pixels.resize(width * height, 0);
+		m_label = label;
+	}
 	YMMnistImage(const YMMnistImage &right) = delete;
 	YMMnistImage(YMMnistImage &&right)
 	{
@@ -28,6 +35,22 @@ public:
 		return *this;
 	}
 
+	YMMnistImage& operator+= (const YMMnistImage &right)
+	{
+		if (m_width == right.m_width
+			&& m_height == right.m_height
+			&& m_pixels.size() == right.m_pixels.size())
+		{
+			m_label = right.m_label;
+			for (size_t i = 0; i < m_pixels.size(); ++i)
+			{
+				m_pixels[i] += right.m_pixels[i];
+			}
+		}
+
+		return *this;
+	}
+
 	//
 	unsigned __int32 GetWidth() const { return m_width; }
 	unsigned __int32 GetHeight() const { return m_height; }
@@ -37,6 +60,9 @@ public:
 	//
 	byte GetPixel(int x, int y) const { return m_pixels[x + m_width * y]; }
 	void SetPixel(int x, int y, byte pixel) { m_pixels[x + m_width * y] = pixel; }
+
+	//
+	void Normalization(int width, int height);
 
 	//
 	byte ToLabel(const YMMnistImageTransParam &param);
