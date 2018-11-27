@@ -17,7 +17,13 @@ void TestDataValidate(const YMMnistImage &data, const wchar_t *folder)
 	static unsigned int index = 0;
 	wchar_t filename[_MAX_PATH];
 	swprintf_s(filename, _MAX_PATH, LR"(%s\DataValidate\%d_%d.png)", folder, index, data.GetLabel());
-	ArrayToImage(filename, data.GetPixels().data(), data.GetWidth(), data.GetHeight());
+	std::vector<byte> imgData;
+	imgData.resize(data.GetPixels().size());
+	for (size_t i = 0; i < imgData.size(); ++i)
+	{
+		imgData[i] = data.GetPixels()[i];
+	}
+	ArrayToImage(filename, imgData.data(), data.GetWidth(), data.GetHeight());
 
 	index += 1;
 }

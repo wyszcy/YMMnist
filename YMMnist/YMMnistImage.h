@@ -51,15 +51,27 @@ public:
 		return *this;
 	}
 
+	YMMnistImage& operator+= (ParamType value) // bias
+	{
+		for (auto &item : m_pixels)
+		{
+			item += value;
+		}
+
+		return *this;
+	}
+
+	void Sigmoid();
+
 	//
 	unsigned __int32 GetWidth() const { return m_width; }
 	unsigned __int32 GetHeight() const { return m_height; }
-	const std::vector<byte>& GetPixels() const { return m_pixels; }
+	const std::vector<__int64>& GetPixels() const { return m_pixels; }
 	byte GetLabel() const { return m_label; }
 
 	//
-	byte GetPixel(int x, int y) const { return m_pixels[x + m_width * y]; }
-	void SetPixel(int x, int y, byte pixel) { m_pixels[x + m_width * y] = pixel; }
+	__int64 GetPixel(int x, int y) const { return m_pixels[x + m_width * y]; }
+	void SetPixel(int x, int y, __int64 pixel) { m_pixels[x + m_width * y] = pixel; }
 
 	//
 	void Normalization(int width, int height);
@@ -70,15 +82,17 @@ public:
 	YMMnistImage Convolution(const YMConvolutionCore &core) const;
 	YMMnistImage Subsampling(int compress = 2) const;
 
-private:
-	byte MatrixMax(const std::vector<byte> &data, int left, int right, int top, int bottom, int width) const;
-	byte MatrixAvg(const std::vector<byte> &data, int left, int right, int top, int bottom, int width) const;
+	ParamType ToDouble() const;
 
-	byte ConvolutionPixel(const YMConvolutionCore &core, const std::vector<byte> &data, int left, int top, int width) const; // left-data, top-data
+private:
+	__int64 MatrixMax(const std::vector<__int64> &data, int left, int right, int top, int bottom, int width) const;
+	__int64 MatrixAvg(const std::vector<__int64> &data, int left, int right, int top, int bottom, int width) const;
+
+	__int64 ConvolutionPixel(const YMConvolutionCore &core, const std::vector<__int64> &data, int left, int top, int width) const; // left-data, top-data
 
 private:
 	unsigned __int32 m_width = 0;
 	unsigned __int32 m_height = 0;
-	std::vector<byte> m_pixels;
+	std::vector<__int64> m_pixels;
 	byte m_label;
 };

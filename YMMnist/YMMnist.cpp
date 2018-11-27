@@ -12,7 +12,6 @@ YMMnist::~YMMnist()
 
 bool YMMnist::LoadSet(const char *imageFile, const char *labelFile)
 {
-
 	m_data.swap(decltype(m_data)());
 	if (!GetLabelFrData(labelFile, m_data))
 	{
@@ -108,7 +107,11 @@ bool YMMnist::GetImageFrData(const char *file, std::vector<YMMnistImage> &data) 
 	for (size_t i = 0; i < len; ++i)
 	{
 		data[i].m_pixels.resize(pixelSize);
-		memcpy(data[i].m_pixels.data(), byteData.data() + 16 + i*pixelSize, pixelSize);
+		for (size_t j = 0; j < pixelSize; ++j)
+		{
+			data[i].m_pixels[j] = byteData[16 + i*pixelSize + j];
+		}
+		//memcpy(data[i].m_pixels.data(), byteData.data() + 16 + i*pixelSize, pixelSize);
 	}
 
 	return true;
