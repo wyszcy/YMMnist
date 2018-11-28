@@ -64,7 +64,7 @@ byte YMMnistImage::ToLabel(const YMMnistImageTransParam &param)
 
 	// C5 layer
 	const int c5Count = param.C5Bias.size();
-	std::vector<byte> c5Output;
+	std::vector<ParamType> c5Output;
 	c5Output.reserve(c5Count);
 	for (size_t i = 0; i < c5Count; ++i)
 	{
@@ -85,8 +85,8 @@ byte YMMnistImage::ToLabel(const YMMnistImageTransParam &param)
 		}
 	}
 
-	// C6 layer
-	std::vector<byte> f6Output;
+	// F6 layer
+	std::vector<ParamType> f6Output;
 	f6Output.resize(param.F6Bias.size(), 0);
 	for (size_t i = 0; i < f6Output.size(); ++i)
 	{
@@ -97,9 +97,10 @@ byte YMMnistImage::ToLabel(const YMMnistImageTransParam &param)
 		}
 
 		f6Output[i] += param.F6Bias[i];
+		f6Output[i] = ::Sigmoid(f6Output[i]);
 	}
 
-	// C7 output
+	// C7 output RBF
 	const int c7Output = param.output.size() / param.F6Bias.size();
 	std::vector<double> output;
 	output.resize(c7Output, 0.0);
@@ -148,7 +149,7 @@ YMMnistImage YMMnistImage::Convolution(const YMConvolutionCore &core) const
 
 __int64 YMMnistImage::ConvolutionPixel(const YMConvolutionCore &core, const std::vector<__int64> &data, int left, int top, int width) const
 {
-	byte res = 0;
+	__int64 res = 0;
 
 	const int bottom = top + core.radiusV * 2 + 1;
 	const int right = left + core.radiusH * 2 + 1;
@@ -161,7 +162,7 @@ __int64 YMMnistImage::ConvolutionPixel(const YMConvolutionCore &core, const std:
 		}
 	}
 
-	return (byte)(res & 0x00000000000000FF);
+	return res;
 }
 
 YMMnistImage YMMnistImage::Subsampling(int compress) const

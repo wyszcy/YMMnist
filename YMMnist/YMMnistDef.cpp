@@ -2,7 +2,7 @@
 
 #include <random>
 
-double Sigmoid(double val)
+ParamType Sigmoid(ParamType val)
 {
 	return 1.0 / (exp(val) + 1.0);
 }
@@ -78,7 +78,7 @@ void YMMnistImageTransParam::InitC3LinkByDefault()
 
 void YMMnistImageTransParam::InitByRandom()
 {
-	const ParamType range = 100.0;
+	const ParamType range = 1.0;
 
 	for (auto &item : C1)
 	{

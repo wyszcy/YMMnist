@@ -5,7 +5,7 @@
 
 using ParamType = double;
 
-extern double Sigmoid(double val);
+extern ParamType Sigmoid(ParamType val);
 
 //////////////////////////////////////////////////////////////////////////
 struct YMConvolutionCore
