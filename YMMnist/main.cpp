@@ -9,7 +9,6 @@
 #include <windows.h>
 
 #include "YMMnist.h"
-#include "ArrayToImage.h"
 #include "utility.h"
 
 void TestDataValidate(const YMMnistImage &data, const wchar_t *folder)
@@ -17,13 +16,7 @@ void TestDataValidate(const YMMnistImage &data, const wchar_t *folder)
 	static unsigned int index = 0;
 	wchar_t filename[_MAX_PATH];
 	swprintf_s(filename, _MAX_PATH, LR"(%s\DataValidate\%d_%d.png)", folder, index, data.GetLabel());
-	std::vector<byte> imgData;
-	imgData.resize(data.GetPixels().size());
-	for (size_t i = 0; i < imgData.size(); ++i)
-	{
-		imgData[i] = data.GetPixels()[i];
-	}
-	ArrayToImage(filename, imgData.data(), data.GetWidth(), data.GetHeight());
+	data.SaveToPNG(filename);
 
 	index += 1;
 }

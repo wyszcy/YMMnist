@@ -77,6 +77,9 @@ public:
 	void Normalization(int width, int height);
 
 	//
+	bool LoadFrPNG(const wchar_t *file, byte label);
+	bool SaveToPNG(const wchar_t *file) const;
+
 	byte ToLabel(const YMMnistImageTransParam &param);
 
 	YMMnistImage Convolution(const YMConvolutionCore &core) const;

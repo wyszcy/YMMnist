@@ -1,5 +1,7 @@
 #include "YMMnistImage.h"
 
+#include <atlimage.h>
+
 #define max(X, Y) (X) > (Y) ? (X) : (Y)
 
 byte YMMnistImage::ToLabel(const YMMnistImageTransParam &param)
@@ -117,6 +119,56 @@ byte YMMnistImage::ToLabel(const YMMnistImageTransParam &param)
 	label = std::min_element(output.cbegin(), output.cend()) - output.cbegin();
 
 	return label;
+}
+
+bool YMMnistImage::SaveToPNG(const wchar_t *file) const
+{
+	CImage im;
+	if (!im.Create(m_width, m_height, 24))
+	{
+		return false;
+	}
+
+	for (int j = 0; j < m_height; ++j)
+	{
+		for (int i = 0; i < m_width; ++i)
+		{
+			byte *pixel = (byte *)im.GetPixelAddress(i, j);
+			*pixel = m_pixels[j*m_width + i];
+			*(pixel + 1) = m_pixels[j*m_width + i];
+			*(pixel + 2) = m_pixels[j*m_width + i];
+		}
+	}
+
+	im.Save(file);
+	im.Destroy();
+
+	return true;
+}
+
+bool YMMnistImage::LoadFrPNG(const wchar_t *file, byte label)
+{
+	m_label = label;
+	CImage im;
+	if (FAILED(im.Load(file)))
+	{
+		return false;
+	}
+	m_width = im.GetWidth();
+	m_height = im.GetHeight();
+	m_pixels.resize(m_width * m_height);
+	for (size_t i = 0; i < m_height; i++)
+	{
+		for (size_t j = 0; j < m_width; j++)
+		{
+			const size_t index = i*m_width + j;
+			m_pixels[index] = *(byte *)im.GetPixelAddress(j, i);
+		}
+	}
+
+	im.Destroy();
+	
+	return true;
 }
 
 void YMMnistImage::Sigmoid()
