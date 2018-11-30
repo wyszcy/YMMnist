@@ -10,6 +10,7 @@
 
 #include "YMMnist.h"
 #include "utility.h"
+#include "BPSolution.h"
 
 void TestDataValidate(const YMMnistImage &data, const wchar_t *folder)
 {
