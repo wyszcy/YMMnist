@@ -25,7 +25,7 @@ int main()
 {
 	const std::wstring path = GetCurrentPathW();
 
-	// ÑµÁ·
+	// train
 	YMMnist lib;
 	if (!lib.LoadSet((GetCurrentPathA() + R"(\mnist\train-images.idx3-ubyte)").c_str(), (GetCurrentPathA() + R"(\mnist\train-labels.idx1-ubyte)").c_str()))
 	{
@@ -37,6 +37,7 @@ int main()
 		item.Normalization(32, 32);
 	}
 
+	//
 	auto &ssss = lib.GetData().front();
 	YMMnistImageTransParam param;
 	param.InitByRandom();
