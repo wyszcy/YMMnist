@@ -7,6 +7,11 @@ ParamType Sigmoid(ParamType val)
 	return 1.0 / (exp(val) + 1.0);
 }
 
+ParamType ReLU(ParamType val)
+{
+	return max(0.0, val);
+}
+
 YMMnistImageTransParam::YMMnistImageTransParam(int c1Ct, int s2Cp, int c3Ct, int s4Cp, int ctC5, int ctF6, int ctOutput)
 {
 	C1.resize(c1Ct);
@@ -82,20 +87,20 @@ void YMMnistImageTransParam::InitByRandom()
 
 	for (auto &item : C1)
 	{
-		item.InitByRandom(range);
+		item.InitByRandom(0.0, range);
 	}
 	for (auto &item : C3)
 	{
-		item.InitByRandom(range);
+		item.InitByRandom(0.0, range);
 	}
 	for (auto &item : C5)
 	{
-		item.InitByRandom(range);
+		item.InitByRandom(0.0, range);
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 	std::default_random_engine e(std::random_device{}());
-	std::uniform_real_distribution<ParamType> u(-range, range);
+	std::uniform_real_distribution<ParamType> u(0.0, range);
 
 	for (auto &item : C1Bias) item = u(e);
 	for (auto &item : C3Bias) item = u(e);

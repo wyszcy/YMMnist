@@ -2,8 +2,6 @@
 
 #include <atlimage.h>
 
-#define max(X, Y) (X) > (Y) ? (X) : (Y)
-
 byte YMMnistImage::ToLabel(const YMMnistImageTransParam &param)
 {
 	byte label = 0;
@@ -20,7 +18,7 @@ byte YMMnistImage::ToLabel(const YMMnistImageTransParam &param)
 	}
 	for (auto &item : c1Output)
 	{
-		item.Sigmoid();
+		item.Activate();
 	}
 	
 	// S2 pools
@@ -54,7 +52,7 @@ byte YMMnistImage::ToLabel(const YMMnistImageTransParam &param)
 	}
 	for (auto &item : c3Output)
 	{
-		item.Sigmoid();
+		item.Activate();
 	}
 
 	// S4 pools
@@ -171,7 +169,7 @@ bool YMMnistImage::LoadFrPNG(const wchar_t *file, byte label)
 	return true;
 }
 
-void YMMnistImage::Sigmoid()
+void YMMnistImage::Activate()
 {
 	for (auto &item : m_pixels)
 	{

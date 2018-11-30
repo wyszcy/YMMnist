@@ -5,6 +5,8 @@
 
 using ParamType = double;
 
+#define max(X, Y) (X) > (Y) ? (X) : (Y)
+
 extern ParamType Sigmoid(ParamType val);
 
 //////////////////////////////////////////////////////////////////////////
@@ -39,10 +41,10 @@ public:
 		return *this;
 	}
 
-	void InitByRandom(ParamType range)
+	void InitByRandom(ParamType rangeL, ParamType rangeR)
 	{
 		std::default_random_engine e(std::random_device{}());
-		std::uniform_real_distribution<ParamType> u(-range, range); // just set it, no why
+		std::uniform_real_distribution<ParamType> u(rangeL, range); // just set it, no why
 		for (auto &item : buf)
 		{
 			item = u(e);

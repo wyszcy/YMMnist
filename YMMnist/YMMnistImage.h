@@ -61,7 +61,7 @@ public:
 		return *this;
 	}
 
-	void Sigmoid();
+	void Activate();
 
 	//
 	unsigned __int32 GetWidth() const { return m_width; }
